@@ -1,10 +1,10 @@
-import * as React from "react";
+import React from "react";
 import ReactDOM from "react-dom";
+import Home from "./page/home";
 
-const rootElement = document.getElementById("root");
 ReactDOM.render(
   <React.StrictMode>
-    Hello world
+    <Home />
   </React.StrictMode>,
-  rootElement
+  document.getElementById("root")
 );
