@@ -1,60 +1,60 @@
-export interface ColourableNode {
+export interface ColorableNode {
   color?: 'red' | 'blue';
   neighbours: Set<string>;
 }
 
 const doColoring = ({
-  colourableNodes,
+  colorableNodes,
   node,
   color,
 }: {
-  colourableNodes: Record<string, ColourableNode>;
+  colorableNodes: Record<string, ColorableNode>;
   node: string;
   color: 'red' | 'blue';
 }): void => {
-  colourableNodes[node].color = color;
-  colourableNodes[node].neighbours.forEach((neighbour) => {
-    if (!colourableNodes[neighbour].color) {
+  colorableNodes[node].color = color;
+  colorableNodes[node].neighbours.forEach((neighbour) => {
+    if (!colorableNodes[neighbour].color) {
       doColoring({
-        colourableNodes,
+        colorableNodes,
         node: neighbour,
         color: color === 'red' ? 'blue' : 'red',
       });
     }
-  })
-}
+  });
+};
 
-const collectColourableNodes = (
-  graph: string[][],
-): Record<string, ColourableNode> =>  {
-  const colourableNodes: Record<string, ColourableNode> = {};
+const collectColorableNodes = (
+  graph: string[][]
+): Record<string, ColorableNode> => {
+  const colorableNodes: Record<string, ColorableNode> = {};
   graph.forEach((nodes) => {
     for (let index = 0; index < nodes.length; index++) {
       const previousNode: string | undefined = nodes[index - 1];
       const node: string = nodes[index];
       const nextNode: string | undefined = nodes[index + 1];
 
-      if (!colourableNodes[node]) {
-        colourableNodes[node] = {
+      if (!colorableNodes[node]) {
+        colorableNodes[node] = {
           color: undefined,
           neighbours: new Set(),
         };
       }
 
       if (previousNode) {
-        colourableNodes[node].neighbours.add(previousNode)
+        colorableNodes[node].neighbours.add(previousNode);
       }
 
       if (nextNode) {
-        colourableNodes[node].neighbours.add(nextNode)
+        colorableNodes[node].neighbours.add(nextNode);
       }
     }
   });
 
-  return colourableNodes;
-}
+  return colorableNodes;
+};
 
-export const isGraphRedBlueColourable = (
+export const isGraphRedBlueColorable = (
   /**
    * Graph structure.
    * [[Node, Node], [Node, Node, Node]]
@@ -65,24 +65,26 @@ export const isGraphRedBlueColourable = (
     return false;
   }
 
-  const colourableNodes = collectColourableNodes(graph);
+  const colorableNodes = collectColorableNodes(graph);
   doColoring({
-    colourableNodes,
+    colorableNodes,
     color: 'red',
-    node: Object.keys(colourableNodes)[0]
+    node: Object.keys(colorableNodes)[0],
   });
 
-  for (const colourableNode of Object.values(colourableNodes)) {
-    if (!colourableNode.color) {
+  for (const colorableNode of Object.values(colorableNodes)) {
+    if (!colorableNode.color) {
       return false;
     }
 
-    const hasSameColorWithNeighbour = Array.from(colourableNode.neighbours)
-      .some((neighbour: string) => colourableNode.color === colourableNodes[neighbour].color);
+    const hasSameColorWithNeighbour = Array.from(colorableNode.neighbours).some(
+      (neighbour: string) =>
+        colorableNode.color === colorableNodes[neighbour].color
+    );
     if (hasSameColorWithNeighbour) {
       return false;
     }
   }
 
   return true;
-}
+};
